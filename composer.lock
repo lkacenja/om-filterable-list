@@ -1,0 +1,62 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "3b162a5597e0563156ba95889c7a60e0",
+    "packages": [
+        {
+            "name": "freshflesh/wp-render-template-part",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thomascharbit/wp-render-template-part.git",
+                "reference": "c7154b9d3c66cc07e98acbc45539e471f2019844"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thomascharbit/wp-render-template-part/zipball/c7154b9d3c66cc07e98acbc45539e471f2019844",
+                "reference": "c7154b9d3c66cc07e98acbc45539e471f2019844",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/wp-render-template-part.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Charbit",
+                    "email": "thomas.charbit@gmail.com"
+                }
+            ],
+            "description": "An alternative to the native WP function `get_template_part` that can pass arguments to the local scope",
+            "homepage": "https://github.com/thomascharbit/wp-render-template-part",
+            "keywords": [
+                "get_template_part",
+                "part",
+                "render",
+                "template",
+                "wordpress"
+            ],
+            "time": "2017-01-05T14:44:48+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
