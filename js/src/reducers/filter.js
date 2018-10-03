@@ -5,7 +5,8 @@ import actionTypes from '../utility/action-types';
 const defaultState = {
   config: filters,
   values: {},
-  defaultValues: {}
+  defaultValues: {},
+  initialized: false
 };
 
 for (var x in filters) {
@@ -18,8 +19,6 @@ for (var x in filters) {
 
 export default function(state, action) {
   switch (action.type) {
-    //case actionTypes.INITIALIZE_FILTERS:
-      //return assign({}, {values: defaultState.values}); 
     case actionTypes.UPDATE_FILTERS:
       const newValues = assign({}, JSON.parse(action.values));
       return assign({}, state, {values: newValues});

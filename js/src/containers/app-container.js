@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getContent, getNextContent, initializeFilters, updateFilters, updatePager } from '../actions';
+import { push } from 'react-router-redux';
 import App from '../components/app';
 import Filters from './filter-container';
 import Pager from './pager-container';
@@ -20,4 +21,4 @@ const mapStateToProps = function(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { getContent, updateFilters, initializeFilters, getNextContent, updatePager })(App);
+export default connect(mapStateToProps, { getContent, updateFilters, initializeFilters, getNextContent, updatePager, push })(App);

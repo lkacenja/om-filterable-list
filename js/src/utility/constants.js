@@ -7,5 +7,6 @@ export default {
   EMPTY_TEXT: 'Your filters did not return any results. Please try again.',
   PAGER_PREVIOUS: 'Previous', 
   PAGER_NEXT: 'Next', 
+  PAGER_TEXT: 'Load More',
   ITEMS_PER_PAGE: 25
 }

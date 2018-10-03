@@ -58,8 +58,12 @@ class App extends Component {
   }
   issueInitialActions() {
     var filterValues = !this.props.params.filterValues || this.props.params.filterValues == "{}" ? JSON.stringify(this.props.defaultValues) : this.props.params.filterValues; 
-    this.props.updateFilters(filterValues);
-    this.props.getContent(this.props.params.filterValues || JSON.stringify(this.props.defaultValues), this.props.params.currentPage || 0);
+    if (filterValues == '{}') {
+      this.props.getContent('{}', this.props.params.currentPage || 0);
+    }
+    else {
+      this.props.push(constants.BASE_PATH + '/' + filterValues + '/');   
+    }
   }
   issueActions() {
     this.props.updateFilters(this.props.params.filterValues || "{}");

@@ -7,6 +7,7 @@ import Filter from '../components/filter';
 import FilterSelect from '../components/filter-select';
 import FilterSearch from '../components/filter-search';
 import FilterDate from '../components/filter-date';
+import FilterRadios from '../components/filter-radios';
 
 const factoryChildren = function(config, values, changeHandler) {
   var elements = [];
@@ -21,6 +22,8 @@ const factoryChildren = function(config, values, changeHandler) {
       case 'search':
         elements.push(factorySearch(config[x], values, x, changeHandler));
         break;
+      case 'radios':
+        elements.push(factoryRadios(config[x], values, x, changeHandler));
     }
   }
   return elements;
@@ -38,6 +41,9 @@ const factoryDate = function(config, values, key, changeHandler) {
   return <FilterDate key={key} fkey={key} config={config} values={values} onChange={changeHandler} />;
 }
 
+const factoryRadios = function(config, values, key, changeHandler) {
+  return <FilterRadios key={key} fkey={key} config={config} values={values} onChange={changeHandler} />;
+}
 
 const getElementValue = function(element) {
   var value;
