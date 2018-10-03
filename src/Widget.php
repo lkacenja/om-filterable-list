@@ -2,7 +2,7 @@
 
 namespace OpenMedia\FilterableList;
 
-use OpenMedia\FilterableList\Views\Config;
+use OpenMedia\FilterableList\ConfigUtility;
 
 class Widget extends \WP_Widget {
 
@@ -26,30 +26,18 @@ class Widget extends \WP_Widget {
     add_action('wp_footer', array($this, 'add_options_to_script'));
     wp_enqueue_script('filterable-list-redux');
     wp_enqueue_style('filterable-list-select2');
-    $all_config = new Config(); 
+    $utility = new ConfigUtility(); 
     $id = $instance['app_config'];
-    $config = $all_config->getView($id);
+    $config = $utility->getConfigById($id);
     $config['list_key'] = $id;
     if (!empty($config)) {
-      foreach ($config['filters'] AS $key => $filter) {
-        if (!empty($filter['options'])) {
-          $select_2_options = array();
-          foreach ($filter['options'] AS $id => $text) {
-            $select_2_options[] = array('id' => $id, 'text' => $text);
-          }
-          $config['filters'][$key]['options'] = $select_2_options;
-        }
-      }
       self::$variables = $config;
-
       $title = apply_filters( 'widget_title', $instance['title'] );
       // before and after widget arguments are defined by themes
       echo $args['before_widget'];
-      if ( ! empty( $title ) ) {
-        echo $args['before_title'] . $title . $args['after_title'];
-        echo "<div id='filterable-list-root'></div>"; 
-        echo $args['after_widget'];
-      }
+      echo $args['before_title'] . $title . $args['after_title'];
+      echo "<div id='filterable-list-root'></div>"; 
+      echo $args['after_widget'];
     }
   }
          
@@ -68,9 +56,9 @@ class Widget extends \WP_Widget {
         <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
       </p>
     <?php
-    $all_config = new Config();
-    $all_views = $all_config->getViews();
-    if (!empty($all_views)) {
+    $utility = new ConfigUtility();
+    $all_config = $utility->getAllConfig();
+    if (!empty($all_config)) {
       if (isset($instance['app_config'])) {
         $app_config = $instance['app_config'];
       } 
@@ -81,7 +69,7 @@ class Widget extends \WP_Widget {
       <p>
         <label for="<?php echo $this->get_field_id( 'app_config' ); ?>"><?php _e( 'App Config:' ); ?></label>
         <select  class="widefat" id="<?php echo $this->get_field_id( 'app_config' ); ?>" name="<?php echo $this->get_field_name( 'app_config' ); ?>">
-        <?php foreach ($all_views AS $key => $option) { ?>
+        <?php foreach ($all_config AS $key => $option) { ?>
           <option value="<?php echo $key; ?>" <?php echo ($app_config == $key ? ' selected' : ''); ?> ><?php echo $option['label']; ?></option> 
         <?php } ?>
         </select>
@@ -90,7 +78,7 @@ class Widget extends \WP_Widget {
     }
     else {
       ?>
-      <p><?php echo $all_config->emptyConfigMessage(); ?></p>
+      <p><?php echo $utility->emptyConfigMessage(); ?></p>
       <?php
     }
   }

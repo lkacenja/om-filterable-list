@@ -2,7 +2,7 @@
 
 namespace OpenMedia\FilterableList;
 
-use OpenMedia\FilterableList\Views\Config; 
+use OpenMedia\FilterableList\ConfigUtility; 
 
 class Controller extends \WP_REST_Controller {
  
@@ -32,35 +32,56 @@ class Controller extends \WP_REST_Controller {
    */
   public function get_items( $request ) {
     $list_type = $request->get_param('list_type');
-    $all_config = new Config();
-    $this_config = $all_config->getView($list_type);
+    $utility = new ConfigUtility();
+    $this_config = $utility->getConfigById($list_type);
     if (empty($this_config)) {
-      throw new \Exception("List is not in config.");
+      throw new \Exception("List is not defined by config.");
     }
     $post_type = $this_config['post_type'];
     $page = !empty($_GET['page']) ? $_GET['page'] : 0;
     $args = array(
       'post_type' => $post_type,
       'post_status' => 'publish',
-      'order_by' => 'date',
       'order' => 'DESC'
     );
-    $meta_query = array('relation' => 'AND');
     foreach ($_GET AS $key => $value) {
-      if ($key != 'page' && $key != 'sort') {
+      if ($key != 'page') {
         if (!empty($this_config['filters'][$key])) {
-          $meta_query[] = array(
-            'key' => $key,
-            'value' => $value,
-            'compare' => is_array($value) ? 'IN' : '='
-          );
+          switch($this_config['filters'][$key]['type']) {
+            case 'search':
+              $args['s'] = $value;
+              break;
+            default:
+              if (!empty($this_config['filters'][$key]['category'])) {
+                $args['tax_query'] = !empty($args['tax_query']) ? $args['tax_query'] : array();
+                $args['tax_query'][] = array(
+                  'taxonomy' => $this_config['filters'][$key]['taxonomy'],
+                  'field' => 'term_id',
+                  'terms' => $value
+                );
+              }
+              else if (!empty($this_config['filters'][$key]['sort'])) {
+                $args['order'] = $this_config['filters'][$key]['order'][$value];
+                $args['order_by'] = $value;
+              }
+              else {
+                $meta_query = !empty($meta_query) ? $meta_query : array('relation' => 'AND');
+                $meta_query[] = array(
+                  'key' => $key,
+                  'value' => $value,
+                  'compare' => is_array($value) ? 'IN' : '='
+                );
+              }
+          }
         }
         else {
           throw new \Exception("Key: $key is not in config.");
         }
       }
     }
-    $args['meta_query'] = $meta_query;
+    if (!empty($meta_query)) {
+      $args['meta_query'] = $meta_query;
+    }
     $query_object = new \WP_Query($args);
     $total = ceil($query_object->post_count / $this_config['items_per_page']);
     $args['paged'] = !empty($_GET['page']) ? $_GET['page'] : 0;
